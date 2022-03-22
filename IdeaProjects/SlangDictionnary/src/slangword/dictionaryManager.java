@@ -9,6 +9,7 @@ public class dictionaryManager {
     private TreeMap<String, TreeSet<String>> slangTree;
     private TreeMap<String, TreeSet<String>> defTree;
     private ArrayList<String> histry;
+    private int test = 0;
 
     // for randomized technique
     private TreeMap<Integer, String> id_sl;
