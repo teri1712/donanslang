@@ -95,7 +95,6 @@ public class dictionaryManager {
         }
     }
 
-
     //for randomized technique
     void updateAddSl(String sl) {
         sl_id.put(sl, numSl);
@@ -167,7 +166,8 @@ public class dictionaryManager {
             cmd = scr.nextInt();
             scr.nextLine(); // skip endline character
 
-            long start = System.currentTimeMillis();if (cmd == 1) {
+            long start = System.currentTimeMillis();
+            if (cmd == 1) {
                 System.out.println("please input the slang: ");
                 String sl = scr.nextLine();
                 dmg.updateHis(sl);
@@ -224,25 +224,51 @@ public class dictionaryManager {
             } else if (cmd == 5) {
                 System.out.println("please input the slang");
                 System.out.println("Options: ");
-                System.out.println("1: change an existed slang to a new slang ");
+                System.out.println("1: edit a slang ( change to another slang )");
                 System.out.println("2: add a new definition to a slang.");
+                System.out.println("3: remove a definition from a slang.");
                 System.out.println("input command : ");
                 int getOp = scr.nextInt();
-                while (getOp != 1 && getOp != 2) {
+                while (getOp != 1 && getOp != 2 && getOp != 3) {
                     System.out.println("wrong command, please input again.");
                     System.out.println("input command: ");
+                    getOp = scr.nextInt();
                 }
                 scr.nextLine();
+                System.out.println("please input the slang : ");
+                String sl = scr.nextLine();
+                TreeSet<String> getDef = dmg.getDef(sl);
+                if (getDef == null) {
+                    System.out.println("the slang does not exist.");
+                    continue;
+                }
                 if (getOp == 1) {
-                    System.out.println("please input the slang : ");
-                    String sl = scr.nextLine();
-                    TreeSet<String> getDef = dmg.getDef(sl);
-                    if (getDef == null) {
-                        System.out.println("the slang does not exist.");
-                        continue;
-                    }
                     System.out.println("please input the new slang's name : ");
                     String newSl = scr.nextLine();
+                    dmg.slangTree.remove(sl);
+                    dmg.slangTree.put(newSl, getDef);
+                    System.out.println("success");
+                } else if (getOp == 2) {
+                    System.out.println("please input the definition: ");
+                    String def = scr.nextLine();
+                    getDef.add(def);
+                    TreeSet<String> v = dmg.defTree.get(def);
+                    if (v == null) {
+                        v = new TreeSet<String>();
+                        dmg.defTree.put(def, v);
+                    }
+                    v.add(sl);
+                } else {
+                    System.out.println("please input the definition: ");
+                    String def = scr.nextLine();
+                    boolean check = getDef.remove(def);
+                    if (!check) {
+                        System.out.println("definition is not a slang's meaning");
+                        continue;
+                    }
+                    TreeSet<String> v = dmg.defTree.get(def);
+                    v.remove(sl);
+                    if (v.isEmpty()) dmg.defTree.remove(def);
                 }
 
             } else if (cmd == 6) {
