@@ -166,7 +166,8 @@ public class dictionaryManager {
             System.out.println("please input the command: ");
             cmd = scr.nextInt();
             scr.nextLine(); // skip endline character
-            if (cmd == 1) {
+
+            long start = System.currentTimeMillis();if (cmd == 1) {
                 System.out.println("please input the slang: ");
                 String sl = scr.nextLine();
                 dmg.updateHis(sl);
@@ -331,6 +332,9 @@ public class dictionaryManager {
             } else {
                 System.out.println("invalid command.");
             }
+            long end = System.currentTimeMillis();
+            long elapsedTime = end - start;
+            System.out.println(elapsedTime);
         }
     }
 }
