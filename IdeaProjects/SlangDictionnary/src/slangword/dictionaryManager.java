@@ -141,9 +141,6 @@ public class dictionaryManager {
         importFile();
     }
 
-    int adu() {
-        return numSl;
-    }
 
     public static void main(String args[]) {
         dictionaryManager dmg = new dictionaryManager();
@@ -152,7 +149,7 @@ public class dictionaryManager {
         System.out.println("2: search for definition.");
         System.out.println("3: slang searching history.");
         System.out.println("4: add new slang.");
-        System.out.println("1: search slang.");
+        System.out.println("5: edit slang.");
         System.out.println("6: delete a slang.");
         System.out.println("7: Reset dictionary.");
         System.out.println("8: On this day slang.");
@@ -165,8 +162,6 @@ public class dictionaryManager {
             System.out.println("please input the command: ");
             cmd = scr.nextInt();
             scr.nextLine(); // skip endline character
-
-            long start = System.currentTimeMillis();
             if (cmd == 1) {
                 System.out.println("please input the slang: ");
                 String sl = scr.nextLine();
@@ -247,11 +242,20 @@ public class dictionaryManager {
                     String newSl = scr.nextLine();
                     dmg.slangTree.remove(sl);
                     dmg.slangTree.put(newSl, getDef);
+                    for (String def : getDef) {
+                        TreeSet<String> defSet = dmg.defTree.get(def);
+                        defSet.remove(sl);
+                        defSet.add(newSl);
+                    }
                     System.out.println("success");
                 } else if (getOp == 2) {
                     System.out.println("please input the definition: ");
                     String def = scr.nextLine();
-                    getDef.add(def);
+                    boolean check = getDef.add(def);
+                    if (!check) {
+                        System.out.println("definition existed.");
+                        continue;
+                    }
                     TreeSet<String> v = dmg.defTree.get(def);
                     if (v == null) {
                         v = new TreeSet<String>();
@@ -358,9 +362,6 @@ public class dictionaryManager {
             } else {
                 System.out.println("invalid command.");
             }
-            long end = System.currentTimeMillis();
-            long elapsedTime = end - start;
-            System.out.println(elapsedTime);
         }
     }
 }
