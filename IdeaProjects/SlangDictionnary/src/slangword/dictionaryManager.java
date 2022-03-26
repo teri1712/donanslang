@@ -124,6 +124,22 @@ public class dictionaryManager {
         return id_sl.get(id);
     }
 
+    void addDef(String sl, TreeSet<String> def) {
+        slangTree.put(sl, def);
+    }
+
+    void addSl(String def, TreeSet<String> sl) {
+        defTree.put(def, sl);
+    }
+
+    TreeSet<String> deleteDef(String sl) {
+        return slangTree.remove(sl);
+    }
+    TreeSet<String> deleteSl(String def) {
+        return defTree.remove(def);
+    }
+
+
     String ramdomSl() {
         Random rnd = new Random();
         long id = rnd.nextLong();
