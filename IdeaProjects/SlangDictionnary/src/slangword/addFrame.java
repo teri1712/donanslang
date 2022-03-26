@@ -15,10 +15,12 @@ public class addFrame extends JFrame implements ActionListener {
     JFrame pa;
     String sl;
 
+
     addFrame(String s, dictionaryManager d, JFrame par) {
         sl = s;
         dmg = d;
         pa = par;
+        par.setEnabled(false);
         this.setTitle("add slang service");
         this.setSize(340, 250);
         this.addWindowListener(new WindowAdapter() {
@@ -59,5 +61,12 @@ public class addFrame extends JFrame implements ActionListener {
             st.add(sl);
         }
         dmg.addDef(sl, def);
+        JOptionPane.showMessageDialog(
+                this,
+                "success",
+                "add service",
+                JOptionPane.INFORMATION_MESSAGE);
+        pa.setEnabled(true);
+        this.dispose();
     }
 }
