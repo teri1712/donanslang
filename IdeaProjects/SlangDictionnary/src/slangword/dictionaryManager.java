@@ -135,6 +135,7 @@ public class dictionaryManager {
     TreeSet<String> deleteDef(String sl) {
         return slangTree.remove(sl);
     }
+
     TreeSet<String> deleteSl(String def) {
         return defTree.remove(def);
     }
@@ -147,6 +148,12 @@ public class dictionaryManager {
         return id_sl.get((int) id);
     }
 
+    String hislist() {
+        String g = "";
+        for (String h : histry) g += "\n" + h;
+        return g;
+    }
+
     dictionaryManager() {
         slangTree = new TreeMap<String, TreeSet<String>>();
         defTree = new TreeMap<String, TreeSet<String>>();
@@ -157,227 +164,4 @@ public class dictionaryManager {
         importFile();
     }
 
-
-    public static void main(String args[]) {
-        dictionaryManager dmg = new dictionaryManager();
-        System.out.println("Menu:  ");
-        System.out.println("1: search for slang.");
-        System.out.println("2: search for definition.");
-        System.out.println("3: slang searching history.");
-        System.out.println("4: add new slang.");
-        System.out.println("5: edit slang.");
-        System.out.println("6: delete a slang.");
-        System.out.println("7: Reset dictionary.");
-        System.out.println("8: On this day slang.");
-        System.out.println("9: slang-definition quiz.");
-        System.out.println("10: definition-slang quiz.");
-        System.out.println("0: quit the proggram.");
-        int cmd = -1;
-        Scanner scr = new Scanner(System.in);
-        while (true) {
-            System.out.println("please input the command: ");
-            cmd = scr.nextInt();
-            scr.nextLine(); // skip endline character
-            if (cmd == 1) {
-                System.out.println("please input the slang: ");
-                String sl = scr.nextLine();
-                dmg.updateHis(sl);
-                TreeSet<String> ans = dmg.getDef(sl);
-                System.out.println("Result: ");
-                if (ans == null) {
-                    System.out.println("slang does not exist.");
-                    continue;
-                }
-                dmg.printSet(ans);
-            } else if (cmd == 2) {
-                System.out.println("please input the definition: ");
-                String def = scr.nextLine();
-                TreeSet<String> ans = dmg.getSl(def);
-                System.out.println("Result: ");
-                if (ans == null) {
-                    System.out.println("definition does not exist.");
-                    continue;
-                }
-                dmg.printSet(ans);
-            } else if (cmd == 3) {
-                System.out.println("Result: ");
-                dmg.printList(dmg.histry);
-            } else if (cmd == 4) {
-                System.out.println("please input the new slang : ");
-                String sl = scr.nextLine();
-                boolean exist = (dmg.slangTree.get(sl) != null);
-                if (exist) {
-                    System.out.println("the slang existed.");
-                    continue;
-                }
-                System.out.println("please input the number of definition : ");
-                int num;
-                while ((num = scr.nextInt()) <= 0) {
-                    System.out.println("invalid number. please input again.");
-                }
-                scr.nextLine();
-                TreeSet<String> slSet = new TreeSet<String>();
-                System.out.println("please input the definitions, each in a line.");
-                for (int i = 0; i < num; i++) {
-                    String def = scr.nextLine();
-                    slSet.add(def);
-                    TreeSet<String> defSet = dmg.defTree.get(def);
-                    if (defSet == null) {
-                        defSet = new TreeSet<String>();
-                        dmg.defTree.put(def, defSet);
-                    }
-                    defSet.add(sl);
-                }
-                dmg.slangTree.put(sl, slSet);
-                dmg.updateAddSl(sl);
-                System.out.println("success");
-
-            } else if (cmd == 5) {
-                System.out.println("please input the slang");
-                System.out.println("Options: ");
-                System.out.println("1: edit a slang ( change to another slang )");
-                System.out.println("2: add a new definition to a slang.");
-                System.out.println("3: remove a definition from a slang.");
-                System.out.println("input command : ");
-                int getOp = scr.nextInt();
-                while (getOp != 1 && getOp != 2 && getOp != 3) {
-                    System.out.println("wrong command, please input again.");
-                    System.out.println("input command: ");
-                    getOp = scr.nextInt();
-                }
-                scr.nextLine();
-                System.out.println("please input the slang : ");
-                String sl = scr.nextLine();
-                TreeSet<String> getDef = dmg.getDef(sl);
-                if (getDef == null) {
-                    System.out.println("the slang does not exist.");
-                    continue;
-                }
-                if (getOp == 1) {
-                    System.out.println("please input the new slang's name : ");
-                    String newSl = scr.nextLine();
-                    dmg.slangTree.remove(sl);
-                    dmg.slangTree.put(newSl, getDef);
-                    for (String def : getDef) {
-                        TreeSet<String> defSet = dmg.defTree.get(def);
-                        defSet.remove(sl);
-                        defSet.add(newSl);
-                    }
-                    System.out.println("success");
-                } else if (getOp == 2) {
-                    System.out.println("please input the definition: ");
-                    String def = scr.nextLine();
-                    boolean check = getDef.add(def);
-                    if (!check) {
-                        System.out.println("definition existed.");
-                        continue;
-                    }
-                    TreeSet<String> v = dmg.defTree.get(def);
-                    if (v == null) {
-                        v = new TreeSet<String>();
-                        dmg.defTree.put(def, v);
-                    }
-                    v.add(sl);
-                } else {
-                    System.out.println("please input the definition: ");
-                    String def = scr.nextLine();
-                    boolean check = getDef.remove(def);
-                    if (!check) {
-                        System.out.println("definition is not a slang's meaning");
-                        continue;
-                    }
-                    TreeSet<String> v = dmg.defTree.get(def);
-                    v.remove(sl);
-                    if (v.isEmpty()) dmg.defTree.remove(def);
-                }
-
-            } else if (cmd == 6) {
-                System.out.println("please input the slang you want to delete : ");
-                String sl = scr.nextLine();
-                TreeSet<String> slSet = dmg.slangTree.get(sl);
-                if (slSet == null) {
-                    System.out.println("slang does not exist");
-                    continue;
-                }
-                for (String def : slSet) {
-                    TreeSet<String> defSet = dmg.defTree.get(def);
-                    defSet.remove(sl);
-                    if (defSet.isEmpty()) dmg.defTree.remove(def);
-                }
-                dmg.slangTree.remove(sl);
-                dmg.updateDelSl(sl);
-                System.out.println("success");
-            } else if (cmd == 7) {
-                dmg.resetDic();
-                System.out.println("success");
-            } else if (cmd == 8) {
-                String rndSl = dmg.rndDateBasedSlang();
-                System.out.println("on this date slang : " + rndSl);
-                System.out.println("defitions: ");
-                dmg.printSet(dmg.getDef(rndSl));
-            } else if (cmd == 9) {
-                System.out.println("Quiz: ");
-                String rndSl = dmg.ramdomSl();
-                TreeSet<String> def = dmg.getDef(rndSl);
-                Random rnd = new Random();
-                int rndPos = (rnd.nextInt() % 4 + 4) % 4;
-                String[] ans = new String[4];
-                ans[rndPos] = dmg.getDef(rndSl).first();
-                for (int i = 0; i < 4; i++) {
-                    if (i != rndPos)
-                        while (true) {
-                            String rndDef = dmg.getDef(dmg.ramdomSl()).first();
-                            if (!def.contains(rndDef)) {
-                                ans[i] = rndDef;
-                                break;
-                            }
-                        }
-                }
-                System.out.println("What is " + rndSl + "'s definition ( only 1 answer ): ");
-                for (int i = 0; i < 4; i++) {
-                    System.out.println((char) (i + 65) + ". " + ans[i]);
-                }
-                System.out.println("input your answer: ");
-                char getinput = scr.nextLine().charAt(0);
-                if ((int) getinput - 65 == rndPos) {
-                    System.out.println("Correct!!");
-                } else {
-                    System.out.println("False answer, the answer is " + (char) (rndPos + 65));
-                }
-            } else if (cmd == 10) {
-                System.out.println("Quiz: ");
-                String Sl = dmg.ramdomSl();
-                String def = dmg.getDef(Sl).first();
-                Random rnd = new Random();
-                int rndPos = (rnd.nextInt() % 4 + 4) % 4;
-                String[] ans = new String[4];
-                ans[rndPos] = Sl;
-                for (int i = 0; i < 4; i++) {
-                    if (i != rndPos)
-                        while (true) {
-                            String rndSl = dmg.ramdomSl();
-                            if (!dmg.getSl(def).contains(rndSl)) {
-                                ans[i] = rndSl;
-                                break;
-                            }
-                        }
-                }
-                System.out.println("Which slang is " + def + " ( only 1 answer ): ");
-                for (int i = 0; i < 4; i++) {
-                    System.out.println((char) (i + 65) + ". " + ans[i]);
-                }
-                System.out.println("input your answer: ");
-                char getinput = scr.nextLine().charAt(0);
-                if ((int) getinput - 65 == rndPos) {
-                    System.out.println("Correct!!");
-                } else {
-                    System.out.println("False answer, the answer is " + (char) (rndPos + 65));
-                }
-            } else if (cmd == 0) {
-                break;
-            } else {
-                System.out.println("invalid command.");
-            }
-        }
-    }
 }
