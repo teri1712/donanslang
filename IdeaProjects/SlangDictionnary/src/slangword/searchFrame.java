@@ -56,7 +56,6 @@ public class searchFrame extends JFrame implements ActionListener {
 
         def.addActionListener(this);
         sl.addActionListener(this);
-        System.out.println(qr);
         this.setVisible(true);
 
     }
@@ -74,11 +73,12 @@ public class searchFrame extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "definition does not exist", "result", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
-            String msg = "";
+            String msg = "<html><body><p style='width: 200px;'>";
             Iterator<String> itr = ans.iterator();
             while (itr.hasNext()) {
                 msg += (itr.next() + (itr.hasNext() ? "," : ""));
             }
+            msg += "</p></body></html>";
             JOptionPane.showMessageDialog(this, msg, "result", JOptionPane.INFORMATION_MESSAGE);
 
         } else if (e.getSource() == sl) {
@@ -92,11 +92,12 @@ public class searchFrame extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "slang does not exist", "result", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
-            String msg = "";
+            String msg = "<html><body><p style='width: 200px;'>";
             Iterator<String> itr = ans.iterator();
             while (itr.hasNext()) {
                 msg += (itr.next() + (itr.hasNext() ? "," : ""));
             }
+            msg += "</p></body></html>";
             JOptionPane.showMessageDialog(this, msg, "result", JOptionPane.INFORMATION_MESSAGE);
         }
     }
