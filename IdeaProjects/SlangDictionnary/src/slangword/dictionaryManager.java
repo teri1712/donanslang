@@ -67,13 +67,6 @@ public class dictionaryManager {
         return defTree.get(def);
     }
 
-    void printSet(TreeSet<String> s) {
-        Iterator<String> itr = s.iterator();
-        while (itr.hasNext()) {
-            System.out.println(itr.next());
-        }
-    }
-
     void resetDic() {
         slangTree.clear();
         defTree.clear();
@@ -88,14 +81,9 @@ public class dictionaryManager {
         histry.add(s);
     }
 
-    void printList(ArrayList<String> l) {
-        if (l.isEmpty()) System.out.println("empty");
-        for (String i : l) {
-            System.out.println(i);
-        }
-    }
 
-    //for randomized technique
+    //for randomized technique, ensure each slang's probability is the same
+
     void updateAddSl(String sl) {
         sl_id.put(sl, numSl);
         id_sl.put(numSl, sl);
@@ -119,7 +107,7 @@ public class dictionaryManager {
     }
 
     String rndDateBasedSlang() {
-        LocalDate d = LocalDate.now();
+        LocalDate d = LocalDate.now(); // get this date hashcode
         int id = (d.hashCode() % numSl + numSl) % numSl;
         return id_sl.get(id);
     }
