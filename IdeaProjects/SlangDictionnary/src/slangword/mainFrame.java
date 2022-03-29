@@ -14,7 +14,7 @@ public class mainFrame extends JFrame implements ActionListener {
     TextField tf1, tf2, tf3, tf4;
     JPanel query, editsl, getSl, quiz;
     JRadioButton A, B, C, D;
-    JTextArea question = new JTextArea("aaaaaaa aaaaaaaaaaaa aaaaaa aaaaaaa aaaa aaaa");
+    JTextArea question = new JTextArea("question");
     dictionaryManager dmg;
     int ansPos;
 
@@ -213,6 +213,7 @@ public class mainFrame extends JFrame implements ActionListener {
                 return;
             }
             dmg.deleteDef(sl);
+            dmg.updateDelSl(sl);
             for (String s : def) {
                 TreeSet<String> g = dmg.getSl(s);
                 g.remove(sl);
@@ -240,6 +241,7 @@ public class mainFrame extends JFrame implements ActionListener {
                 return;
             }
             addFrame af = new addFrame(sl, dmg, this);
+            dmg.updateAddSl(sl);
         } else if (e.getSource() == quizdef) {
             String Sl = dmg.ramdomSl();
             String qzdef = dmg.getDef(Sl).first();
@@ -311,6 +313,15 @@ public class mainFrame extends JFrame implements ActionListener {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            TreeSet<String> getnsl = dmg.getDef(newSl);
+            if (getnsl != null) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "slang does exist",
+                        "ERROR",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             dmg.deleteDef(oldSl);
             dmg.addDef(newSl, dt);
             for (String def : dt) {
@@ -323,6 +334,8 @@ public class mainFrame extends JFrame implements ActionListener {
                     "change success",
                     "edit service",
                     JOptionPane.INFORMATION_MESSAGE);
+            dmg.updateDelSl(oldSl);
+            dmg.updateAddSl(newSl);
 
         } else if (e.getSource() == tdsl) {
             tf4.setText(dmg.rndDateBasedSlang());
@@ -368,7 +381,7 @@ public class mainFrame extends JFrame implements ActionListener {
                     JOptionPane.INFORMATION_MESSAGE);
         } else if (e.getSource() == history) {
             JOptionPane.showMessageDialog(
-                    this,  dmg.hislist()
+                    this, dmg.hislist()
                     ,
                     "history",
                     JOptionPane.INFORMATION_MESSAGE);
